@@ -9,7 +9,7 @@ import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.internal.DefaultShellCallback;
 
-public class MybatisGenerateEntrance {
+public class Main {
 	public static void main(String[] args) throws Exception {
 		List<String> warnings = new ArrayList<String>();
 		boolean overwrite = true;
