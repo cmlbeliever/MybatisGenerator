@@ -9,6 +9,8 @@ import org.mybatis.generator.codegen.mybatis3.IntrospectedTableMyBatis3Impl;
 //MyBatis3 的实现
 public class TkMyBatis3Impl extends IntrospectedTableMyBatis3Impl {
 
+	private String originDomainObjectName;
+
 	@Override
 	protected String calculateMyBatis3XmlMapperFileName() {
 		StringBuilder sb = new StringBuilder();
@@ -18,8 +20,10 @@ public class TkMyBatis3Impl extends IntrospectedTableMyBatis3Impl {
 			if (ind != -1) {
 				mapperName = mapperName.substring(ind + 1);
 			}
-			// 支持mapperName = "{0}Dao" 等用法
-			sb.append(MessageFormat.format(mapperName, fullyQualifiedTable.getDomainObjectName()));
+			// sb.append(MessageFormat.format(mapperName,
+			// fullyQualifiedTable.getDomainObjectName()));
+
+			sb.append(formatMapperName(originDomainObjectName));
 			sb.append(".xml"); //$NON-NLS-1$
 		} else {
 			sb.append(fullyQualifiedTable.getDomainObjectName());
@@ -35,14 +39,14 @@ public class TkMyBatis3Impl extends IntrospectedTableMyBatis3Impl {
 	@Override
 	public void setFullyQualifiedTable(FullyQualifiedTable fullyQualifiedTable) {
 		try {
+			originDomainObjectName = fullyQualifiedTable.getDomainObjectName();
 			Field domainObjectNameField = fullyQualifiedTable.getClass().getDeclaredField("domainObjectName");
 			domainObjectNameField.setAccessible(true);
-			domainObjectNameField.set(fullyQualifiedTable, "Base" + fullyQualifiedTable.getDomainObjectName());
+			domainObjectNameField.set(fullyQualifiedTable, formatBeanBame(fullyQualifiedTable.getDomainObjectName()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		super.setFullyQualifiedTable(fullyQualifiedTable);
-		System.out.println("===setFullyQualifiedTable===>" + fullyQualifiedTable.getDomainObjectName());
 	}
 
 	@Override
@@ -69,9 +73,8 @@ public class TkMyBatis3Impl extends IntrospectedTableMyBatis3Impl {
 		sb.append(calculateJavaClientInterfacePackage());
 		sb.append('.');
 		if (stringHasValue(tableConfiguration.getMapperName())) {
-			// 支持mapperName = "{0}Dao" 等用法
-			sb.append(MessageFormat.format(tableConfiguration.getMapperName(),
-					fullyQualifiedTable.getDomainObjectName()));
+			// 支持mapperName 格式化功能
+			sb.append(MessageFormat.format(tableConfiguration.getMapperName(), fullyQualifiedTable.getDomainObjectName()));
 		} else {
 			sb.append(fullyQualifiedTable.getDomainObjectName());
 			sb.append("Mapper"); //$NON-NLS-1$
@@ -83,12 +86,19 @@ public class TkMyBatis3Impl extends IntrospectedTableMyBatis3Impl {
 		sb.append('.');
 		if (stringHasValue(tableConfiguration.getSqlProviderName())) {
 			// 支持mapperName = "{0}SqlProvider" 等用法
-			sb.append(MessageFormat.format(tableConfiguration.getSqlProviderName(),
-					fullyQualifiedTable.getDomainObjectName()));
+			sb.append(MessageFormat.format(tableConfiguration.getSqlProviderName(), fullyQualifiedTable.getDomainObjectName()));
 		} else {
 			sb.append(fullyQualifiedTable.getDomainObjectName());
 			sb.append("SqlProvider"); //$NON-NLS-1$
 		}
 		setMyBatis3SqlProviderType(sb.toString());
+	}
+
+	private String formatMapperName(String mapperName) {
+		return MessageFormat.format(context.getProperty("mapperNameFormat"), mapperName);
+	}
+
+	private String formatBeanBame(String beanName) {
+		return MessageFormat.format(context.getProperty("beanNameFormat"), beanName);
 	}
 }

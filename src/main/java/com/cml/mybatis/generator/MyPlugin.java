@@ -2,29 +2,22 @@ package com.cml.mybatis.generator;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Properties;
 
-import javax.swing.text.AbstractDocument.Content;
-
-import org.mybatis.generator.api.GeneratedJavaFile;
-import org.mybatis.generator.api.GeneratedXmlFile;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
-import org.mybatis.generator.config.Context;
 import org.springframework.util.ReflectionUtils;
 
 public class MyPlugin extends PluginAdapter {
 
-	/**
-	 * 
-	 */
 	public MyPlugin() {
 	}
 
 	public boolean validate(List<String> warnings) {
 		// false 表示此plugin不执行
-		return true;
+		return false;
 	}
 
 	@Override
@@ -39,7 +32,7 @@ public class MyPlugin extends PluginAdapter {
 		String fullyBeanName = null;
 		try {
 			FullyQualifiedJavaType oldType = topLevelClass.getType();
-			fullyBeanName = oldType.getPackageName() + "." + oldType.getShortName()+"Bean";
+			fullyBeanName = oldType.getPackageName() + "." + oldType.getShortName();
 			field.set(topLevelClass, new FullyQualifiedJavaType(fullyBeanName));
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
@@ -47,8 +40,6 @@ public class MyPlugin extends PluginAdapter {
 
 		// 重命名Mapper对应bean
 		introspectedTable.setDAOImplementationType(fullyBeanName);
-		System.out.println(topLevelClass.getType().getFullyQualifiedName() + ",===="
-				+ introspectedTable.getAttribute("ATTR_DAO_INTERFACE_TYPE"));
 		return true;
 	}
 

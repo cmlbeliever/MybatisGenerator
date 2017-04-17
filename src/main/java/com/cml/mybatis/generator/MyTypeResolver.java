@@ -49,9 +49,6 @@ public class MyTypeResolver implements JavaTypeResolver {
 
 	@Override
 	public String calculateJdbcTypeName(IntrospectedColumn arg0) {
-		System.out.println(
-				"=========calculateJdbcTypeName=====>" + arg0.getJdbcTypeName() + "," + arg0.getActualColumnName() + "," + arg0.isBLOBColumn());
-		// return defaultImpl.calculateJdbcTypeName(arg0);
 		return arg0.getJdbcTypeName();
 	}
 
