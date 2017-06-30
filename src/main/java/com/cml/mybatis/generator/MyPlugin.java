@@ -2,7 +2,6 @@ package com.cml.mybatis.generator;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Properties;
 
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;

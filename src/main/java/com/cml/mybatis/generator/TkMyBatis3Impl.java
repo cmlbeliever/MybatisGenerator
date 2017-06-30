@@ -24,7 +24,7 @@ public class TkMyBatis3Impl extends IntrospectedTableMyBatis3Impl {
 			// fullyQualifiedTable.getDomainObjectName()));
 
 			sb.append(formatMapperName(originDomainObjectName));
-			sb.append(".xml"); //$NON-NLS-1$
+			sb.append(".sql.xml"); //$NON-NLS-1$
 		} else {
 			sb.append(fullyQualifiedTable.getDomainObjectName());
 			sb.append("Mapper.xml"); //$NON-NLS-1$
@@ -74,7 +74,7 @@ public class TkMyBatis3Impl extends IntrospectedTableMyBatis3Impl {
 		sb.append('.');
 		if (stringHasValue(tableConfiguration.getMapperName())) {
 			// 支持mapperName 格式化功能
-			sb.append(MessageFormat.format(tableConfiguration.getMapperName(), fullyQualifiedTable.getDomainObjectName()));
+			sb.append(formatMapperName(fullyQualifiedTable.getDomainObjectName()));
 		} else {
 			sb.append(fullyQualifiedTable.getDomainObjectName());
 			sb.append("Mapper"); //$NON-NLS-1$
